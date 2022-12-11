@@ -21,11 +21,12 @@ import {
 
 
 
-import SplashScreen from './src/screen/splash_screen/SplashScreen';
+// import RootStack from './src/navigation/Navigation';
+import AuthScreen from "./src/screen/auth_screen/AuthScreen";
 
 const App = () => {
   return (
-    <SplashScreen/>
+    <AuthScreen/>
   );
 };
 

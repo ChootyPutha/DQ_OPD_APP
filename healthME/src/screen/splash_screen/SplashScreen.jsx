@@ -1,8 +1,14 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { View, StyleSheet, Text } from "react-native";
+import {navigateTimeOutLoginHook} from './hooks/navigationHooks';
 
 
 const SplashScreen = () => {
+
+    useEffect(()=>{
+        navigateTimeOutLoginHook('Auth');
+    },[]);
+
     return (
         <View style={style.main}>
             <View style={style.titleHolder}>
