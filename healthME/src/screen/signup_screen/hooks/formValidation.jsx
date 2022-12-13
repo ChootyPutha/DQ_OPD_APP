@@ -1,4 +1,5 @@
-export function passwordMatch(password, confimPass) {
+/* eslint-disable prettier/prettier */
+function passwordMatch(password, confimPass) {
   if (password === confimPass) {
     return true;
   } else {
@@ -6,7 +7,7 @@ export function passwordMatch(password, confimPass) {
   }
 }
 
-export function validEmailAddress(email) {
+function validEmailAddress(email) {
   let expression =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -16,3 +17,6 @@ export function validEmailAddress(email) {
     return false;
   }
 }
+
+export {passwordMatch};
+export {validEmailAddress};
