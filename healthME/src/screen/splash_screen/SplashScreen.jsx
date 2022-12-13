@@ -10,6 +10,8 @@ const SplashScreen = () => {
 
     const navigation = useNavigation();
 
+    global.keys = "";
+
     useEffect(() => {
         setTimeout(()=>{
             navigation.navigate('Auth');

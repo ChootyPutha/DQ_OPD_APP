@@ -5,11 +5,12 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import InputFeild from "../../../componet/InputFeild";
 import Button from "../../../componet/Button";
-import {Function_GetDoctorsInfo,Funition_AddChannel} from '../../../api/apiCall';
+import { Function_GetDoctorsInfo, Funition_AddChannel } from '../../../api/apiCall';
+import FetchIndicator from "../../../componet/FetchIndicator";
 
 const CreateChannelScreen = () => {
 
-    const [doctor, setDctor] = useState({"name" : "select Doctor"});
+    const [doctor, setDctor] = useState({ "name": "select Doctor" });
     const [channelDate, setChannelDate] = useState("");
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
@@ -17,10 +18,11 @@ const CreateChannelScreen = () => {
     const [count, setCount] = useState("");
     const [docList, setDocList] = useState([]);
     const [openDoc, setOpenDoc] = useState(false);
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchDocInfo();
-    },[]);
+    }, []);
 
     const validateForm = () => {
         if (doctor != "") {
@@ -50,40 +52,49 @@ const CreateChannelScreen = () => {
         }
     }
 
-    async function createChannelHandler(){
+    async function createChannelHandler() {
         try {
-            Funition_AddChannel(doctor?._id,channelDate,startTime,endTime,duration,count).then((result)=>{
+            setFetchIndicatorVisble(true);
+            Funition_AddChannel(doctor?._id, channelDate, startTime, endTime, duration, count).then((result) => {
                 //console.log("result "+JSON.stringify(result));
-                if(result.code == "200"){
+                if (result.code == "200") {
+                    setFetchIndicatorVisble(false);
                     alert("Successfully create channel");
-                }else{
+                } else {
+                    setFetchIndicatorVisble(false);
                     alert("Unable to create channel, plase try again");
                 }
-            }).catch((e)=>{
+            }).catch((e) => {
+                setFetchIndicatorVisble(false);
                 console.log("api " + e);
                 alert("Somthing went wrong, please try again");
-                
+
             });
         } catch (error) {
+            setFetchIndicatorVisble(false);
             console.log("error " + error);
             alert("Somthing went wrong, please try again");
-            
+
         }
     }
 
-    function fetchDocInfo () {
+    function fetchDocInfo() {
         try {
-            Function_GetDoctorsInfo().then((result)=>{
-                if(result.code == "200"){
+            setFetchIndicatorVisble(true);
+            Function_GetDoctorsInfo().then((result) => {
+                if (result.code == "200") {
                     setDocList(result.responce);
-                }else{
-
+                    setFetchIndicatorVisble(false);
+                } else {
+                    setFetchIndicatorVisble(false);
                 }
-            }).catch((er)=>{
-                console.log("error "+er);
+            }).catch((er) => {
+                setFetchIndicatorVisble(false);
+                console.log("error " + er);
             })
         } catch (error) {
-            console.log("error "+error);
+            setFetchIndicatorVisble(false);
+            console.log("error " + error);
         }
     }
     return (
@@ -156,7 +167,7 @@ const CreateChannelScreen = () => {
                                 {
                                     docList.map((doc) => {
                                         return (
-                                            <TouchableOpacity style={style.singleTouchView} onPress={() => {setDctor(doc); setOpenDoc(!openDoc);}}>
+                                            <TouchableOpacity style={style.singleTouchView} onPress={() => { setDctor(doc); setOpenDoc(!openDoc); }}>
                                                 <View style={style.singleView}>
                                                     <Text style={style.selectDoc}>{doc.doctorName}</Text>
                                                 </View>
@@ -169,7 +180,12 @@ const CreateChannelScreen = () => {
                     </View>
                 </View>
             </Modal>
-
+            {
+                (fetchIndicatorVisible) ?
+                    <FetchIndicator />
+                    :
+                    null
+            }
         </View>
     )
 }
@@ -309,11 +325,11 @@ const style = StyleSheet.create({
         fontSize: 18,
         color: '#000'
     },
-    inputTextSty : {
+    inputTextSty: {
         fontSize: 16,
         fontFamily: 'UbuntuMono-Bold',
         color: '#000',
-        paddingLeft : 10
+        paddingLeft: 10
     }
 
 

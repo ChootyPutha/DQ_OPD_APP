@@ -1,45 +1,124 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
-import React from "react";
-import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
-import FilterInput from "../../../componet/FilterInput";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, SafeAreaView, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Funtion_GetALLChannelInfo, Function_AddApointment } from '../../../api/apiCall';
+import FetchIndicator from "../../../componet/FetchIndicator";
 
-const HomeScreen = () => {
+const HomeScreen = ({ }) => {
+
+    const [channelList, setChannelList] = useState([]);
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
+
+
+    useEffect(() => {
+        fetchChannelInfo();
+    }, []);
+
+
+    function fetchChannelInfo() {
+        setFetchIndicatorVisble(true);
+        try {
+            Funtion_GetALLChannelInfo().then((result) => {
+                if (result.code == "200") {
+
+                    setChannelList(result.responce);
+                    setFetchIndicatorVisble(false);
+                } else {
+                    setChannelList([]);
+                    setFetchIndicatorVisble(false);
+                }
+            }).catch((er) => {
+                setFetchIndicatorVisble(false);
+                console.log("err" + er);
+            });
+        } catch (error) {
+            setFetchIndicatorVisble(false);
+            console.log("error " + error);
+        }
+    }
+
+    async function createAppoinemnt(channel) {
+        try {
+            setFetchIndicatorVisble(true);
+            Function_AddApointment(channel._id, global.keys, channel.channelDate, channel.startTime, (parseInt(channel.countChannel) + 1), "Pending").then((result) => {
+                console.log("result " + JSON.stringify(result.responce));
+                if (result.code == "200") {
+                    setFetchIndicatorVisble(false);
+                    alert("Successfully create appointment");
+                } else {
+                    setFetchIndicatorVisble(false);
+                    alert("Unable to create appoinment, try again");
+                }
+            }).catch((err) => {
+                setFetchIndicatorVisble(false);
+                console.log("err " + err);
+                alert("somthing went wrong, try again");
+            });
+        } catch (error) {
+            setFetchIndicatorVisble(false);
+            console.log("error " + error);
+            alert("somthing went wrong, try again");
+        }
+    }
+
     return (
-        <View style={style.main}>
+        <SafeAreaView style={style.main}>
             <View style={style.mainContainer}>
-                <View style={style.titelHolder}>
-                    <Text style={style.headderText}>{"Find Your Desired \nDoctor"}</Text>
-                </View>
-                <View style={style.dataLoaderHolder}>
-                    <View style={style.serchViewHolder}>
-                        {/* serch view */}
-                        <FilterInput />
+                <View style={style.mainContainer}>
+                    <View style={style.titelHolder}>
+                        <Text style={style.headderText}>{"Find Your Desired \nDoctor"}</Text>
                     </View>
+                    <View style={style.dataLoaderHolder}>
+                        {/* <View style={style.serchViewHolder}>
+                        <FilterInput />
+                    </View> */}
 
-                    <View style={style.listpolulteHolder}>
-                        <View style={style.singleItemHolder}>
-                            <View style={style.infoViewholder}>
-                                <View style={style.DocNameHolder}>
-                                    <Text style={[style.docNameText, { color: '#000' }]}>Doc Name</Text>
-                                </View>
-                                <View style={style.seplistHolder}>
-                                    <Text style={[style.speNameText, { color: '#000' }]}>Specalist</Text>
-                                </View>
-                                <View style={style.buttonView}>
-                                    <View style={[style.buttonHolder,{height : '50%'}]}>
-                                        <Text style={style.docNameText}>Book an appointment</Text>
-                                    </View>
-                                    <View style={[style.apoinmentHolder,{height : '30%'}]}>
-                                        <Text style={style.speNameText}>Appinrmnt Date and Time</Text>
-                                    </View>
-                                </View>
+                        <View style={style.listpolulteHolder}>
 
-                            </View>
+                            {
+                                (channelList.length > 0) ?
+                                    channelList.map((chanel) => {
+                                        return (
+                                            <TouchableOpacity style={style.TouchItem} onPress={() => { createAppoinemnt(chanel); }}>
+                                                <View style={style.singleItemHolder}>
+                                                    <View style={style.infoViewholder}>
+                                                        <View style={style.DocNameHolder}>
+                                                            <Text style={[style.docNameText, { color: '#000' }]}>{chanel.docsInfo[0].doctorName}</Text>
+                                                        </View>
+                                                        <View style={style.seplistHolder}>
+                                                            <Text style={[style.speNameText, { color: '#000' }]}>{chanel.docsInfo[0].doctorType}</Text>
+                                                        </View>
+                                                        <View style={style.buttonView}>
+                                                            <View style={[style.buttonHolder, { height: '50%' }]}>
+                                                                <Text style={style.docNameText}>Book an appointment</Text>
+                                                            </View>
+                                                            <View style={[style.apoinmentHolder, { height: '30%' }]}>
+                                                                <Text style={style.speNameText}>{chanel.channelDate + " on " + chanel.startTime + " To " + chanel.endTime}</Text>
+                                                            </View>
+                                                        </View>
+
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )
+                                    })
+                                    :
+                                    <Text style={style.erortext}>No Channel Avalible now</Text>
+                            }
+
+
                         </View>
                     </View>
                 </View>
+                {
+                    (fetchIndicatorVisible) ?
+                        <FetchIndicator />
+                        :
+                        null
+                }
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -61,13 +140,14 @@ const style = StyleSheet.create({
     },
     titelHolder: {
         width: "96%",
-        height: "20%",
+        height: "15%",
         justifyContent: 'center',
+
     },
     dataLoaderHolder: {
         width: "96%",
-        height: "80%",
-        //justifyContent: 'center',
+        height: "85%",
+        justifyContent: 'center',
         alignItems: 'center'
     },
     serchViewHolder: {
@@ -78,13 +158,22 @@ const style = StyleSheet.create({
     },
     listpolulteHolder: {
         width: "96%",
-        height: "90%",
-        justifyContent: 'center',
-        alignItems: 'center'
+        height: "100%",
+        alignItems: 'center',
+    },
+    ScrollViews: {
+        width: "96%",
+        height: "100%",
+    },
+    TouchItem: {
+        width: '90%',
+        height: '20%',
+        alignItems: 'center',
+        margin: 5,
     },
     singleItemHolder: {
-        width: "96%",
-        height: "18%",
+        width: "100%",
+        height: "100%",
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#6C5CE71F',
@@ -128,13 +217,18 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    buttonView : {
+    buttonView: {
         width: "98%",
         height: "50%",
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius : 15,
-        backgroundColor :'#00CEC9'
+        borderRadius: 15,
+        backgroundColor: '#00CEC9'
+    },
+    erortext: {
+        fontFamily: 'UbuntuMono-Bold',
+        fontSize: 18,
+        color: '#c44569'
     }
 });
 

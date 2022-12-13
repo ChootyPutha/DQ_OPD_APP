@@ -4,12 +4,14 @@ import React, { useState, useEffect } from "react";
 
 import { View, StyleSheet, Text, ScrollView, SafeAreaView } from 'react-native';
 import { Function_GetAppoinmentListByChannelID } from '../../../api/apiCall';
+import FetchIndicator from "../../../componet/FetchIndicator";
 
 const AppoinmentListScreen = ({ navigation, route }) => {
 
     const [appoinmentList, setAppoinmentList] = useState([]);
     const [appoinmentId, setAppoinmentId] = useState("");
     const [channelId, setChannelId] = useState(route.params?.chanelInfo._id);
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
 
 
     useEffect(() => {
@@ -19,19 +21,24 @@ const AppoinmentListScreen = ({ navigation, route }) => {
 
     async function fetchAppoinmantListInfo() {
         try {
+            setFetchIndicatorVisble(true);
             Function_GetAppoinmentListByChannelID(channelId).then((result) => {
                 //console.log("datas " + JSON.stringify(result.responce));
                 if (result.code == "200") {
                     setAppoinmentList(result.responce);
+                    setFetchIndicatorVisble(false);
 
                 } else {
                     setAppoinmentList([]);
+                    setFetchIndicatorVisble(false);
                 }
             }).catch((err) => {
+                setFetchIndicatorVisble(false);
                 console.log("error " + err);
 
             });
         } catch (error) {
+            setFetchIndicatorVisble(false);
             console.log("error " + error);
         }
     }
@@ -80,6 +87,12 @@ const AppoinmentListScreen = ({ navigation, route }) => {
                         </ScrollView>
                     </View>
                 </View>
+                {
+                (fetchIndicatorVisible) ? 
+                <FetchIndicator />
+                :
+                null
+            }
             </View>
         </SafeAreaView>
     )

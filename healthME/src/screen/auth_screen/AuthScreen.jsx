@@ -8,13 +8,14 @@ import AccountSelector from "../../componet/AccountSelector";
 import { useNavigation } from '@react-navigation/native';
 import { validEmailAddress } from '../signup_screen/hooks/formValidation';
 import { Function_AdminSignIn, Function_PatientSignIn } from '../../api/apiCall';
-
+import FetchIndicator from "../../componet/FetchIndicator";
 const AuthScreen = () => {
 
     const navigation = useNavigation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [selectAccount, setSelectetAccount] = useState("PA"); // admin AD
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
 
     const handelSingInNavigation = () => {
         navigation.navigate('Signup');
@@ -40,8 +41,10 @@ const AuthScreen = () => {
 
     const handelSinginAction = async () => {
         if (selectAccount == 'PA') {
+            setFetchIndicatorVisble(true);
             AuthPatient();
         } else if (selectAccount == "AD") {
+            setFetchIndicatorVisble(true);
             AuthAdmin();
         } else {
             console.log("invalid account type");
@@ -55,23 +58,29 @@ const AuthScreen = () => {
 
                     if (result.responce._id != undefined) {
                         //auth success
-                        navigation.navigate('AdminHome');
+                        setFetchIndicatorVisble(false);
+                        global.keys = result.responce._id;
+                        navigation.navigate('AdminHome',{ id : result.responce._id});
                     }else{
+                        setFetchIndicatorVisble(false);
                         alert("Unable to find your account, Place re-check your email and password");
                     }
                     //assing id to redux state
                 } else {
                     // auth failed
+                    setFetchIndicatorVisble(false);
                     alert("Something went wrong, plase try again");
 
                 }
             }).catch((e) => {
                 console.log("api " + e);
+                setFetchIndicatorVisble(false);
                 alert("Something went wrong, plase try again");
                 //error
             })
         } catch (error) {
             console.log("error " + error);
+            setFetchIndicatorVisble(false);
             alert("Something went wrong, plase try again");
         }
     }
@@ -81,21 +90,26 @@ const AuthScreen = () => {
             Function_PatientSignIn(email, password, selectAccount).then((result) => {
                 if (result.code == "200") {
                     //auth success
-                    navigation.navigate('PatientHome');
+                    setFetchIndicatorVisble(false);
+                    global.keys = result.responce._id;
+                    navigation.navigate('PatientHome',{ id : result.responce._id});
 
                 } else {
                     // auth failed
+                    setFetchIndicatorVisble(false);
                     alert("Unable to signin, plase try again");
 
                 }
             }).catch((e) => {
                 console.log("api " + e);
+                setFetchIndicatorVisble(false);
                 alert("Something went wrong, plase try again");
 
                 //error
             })
         } catch (error) {
             console.log("error " + error);
+            setFetchIndicatorVisble(false);
             alert("Something went wrong, plase try again");
 
             //error
@@ -141,6 +155,13 @@ const AuthScreen = () => {
                     </View>
                 </View>
             </View>
+            {
+                (fetchIndicatorVisible) ? 
+                <FetchIndicator />
+                :
+                null
+            }
+
         </View>
     )
 }
