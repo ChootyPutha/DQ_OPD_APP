@@ -1,10 +1,39 @@
 /* eslint-disable prettier/prettier */
-import React,{useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, SafeAreaView } from "react-native";
+import { Function_GetAppoinmentListByPaientID } from '../../../api/apiCall';
+import FetchIndicator from "../../../componet/FetchIndicator";
 
 const MyAppoinmentHistoryScreen = () => {
 
     const [myAppoinment, setMyAppoinment] = useState([]);
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
+
+    useEffect(() => {
+        fetchPatientAppoinmentHistory();
+    }, []);
+
+    async function fetchPatientAppoinmentHistory() {
+        setFetchIndicatorVisble(true);
+        try {
+            Function_GetAppoinmentListByPaientID(global.keys).then((result) => {
+                if (result.code == "200") {
+                    
+                    setMyAppoinment(result.responce);
+                    setFetchIndicatorVisble(false);
+                } else {
+                    setMyAppoinment([]);
+                    setFetchIndicatorVisble(false);
+                }
+            }).catch((err) => {
+                console.log("err " + err);
+                setFetchIndicatorVisble(false);
+            });
+        } catch (error) {
+            console.log("error" + error);
+            setFetchIndicatorVisble(false);
+        }
+    }
 
     return (
         <View style={style.main}>
@@ -14,28 +43,44 @@ const MyAppoinmentHistoryScreen = () => {
                 </View>
                 <View style={style.dataLoaderHolder}>
                     <View style={style.listpolulteHolder}>
-                        <View style={style.singleItemHolder}>
-                            <View style={style.infoViewholder}>
-                                <View style={style.DocNameHolder}>
-                                    <Text style={[style.docNameText, { color: '#000' }]}>Doc Name</Text>
-                                </View>
-                                <View style={style.seplistHolder}>
-                                    <Text style={[style.speNameText, { color: '#000' }]}>Specalist</Text>
-                                </View>
-                                <View style={style.buttonView}>
-                                    {/* <View style={[style.buttonHolder,{height : '50%'}]}>
+                        {
+                            (myAppoinment.length > 0) ?
+                                myAppoinment.map((appoinment) => {
+                                    return (
+                                        <View style={style.singleItemHolder}>
+                                            <View style={style.infoViewholder}>
+                                                <View style={style.DocNameHolder}>
+                                                    <Text style={[style.docNameText, { color: '#000' }]}>{appoinment.appoinmentNumber}</Text>
+                                                </View>
+                                                <View style={style.seplistHolder}>
+                                                    <Text style={[style.speNameText, { color: '#000' }]}>{"Appoinment Time "+appoinment.appoinmentTime}</Text>
+                                                </View>
+                                                <View style={style.buttonView}>
+                                                    {/* <View style={[style.buttonHolder,{height : '50%'}]}>
                                         <Text style={style.docNameText}>Book an appointment</Text>
                                     </View> */}
-                                    <View style={[style.apoinmentHolder,{height : '30%'}]}>
-                                        <Text style={style.speNameText}>Appinrmnt Date and Time</Text>
-                                    </View>
-                                </View>
+                                                    <View style={[style.apoinmentHolder, { height: '30%' }]}>
+                                                        <Text style={style.speNameText}>{"Appoinment Status "+appoinment.appoinmentStatus}</Text>
+                                                    </View>
+                                                </View>
 
-                            </View>
-                        </View>
+                                            </View>
+                                        </View>
+                                    )
+                                })
+                                :
+                                <Text style={style.erortext}>No Appoinment recode found</Text>
+                        }
+
                     </View>
                 </View>
             </View>
+            {
+                (fetchIndicatorVisible) ? 
+                <FetchIndicator />
+                :
+                null
+            }
         </View>
     )
 }
@@ -125,13 +170,18 @@ const style = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    buttonView : {
+    buttonView: {
         width: "98%",
         height: "50%",
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius : 15,
-        backgroundColor :'#00CEC9'
+        borderRadius: 15,
+        backgroundColor: '#00CEC9'
+    },
+    erortext: {
+        fontFamily: 'UbuntuMono-Bold',
+        fontSize: 18,
+        color: '#c44569'
     }
 
 });

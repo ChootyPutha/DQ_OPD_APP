@@ -256,6 +256,30 @@ const Function_GetAppoinmentListByChannelID = async (chanelID) => {
     }
 }
 
+const Function_GetAppoinmentListByPaientID = async (patentID) => {
+    var url = BASE_URL + `/appoinment/${patentID}`;
+    try {
+        let responce = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        let code = responce.status;
+        //console.log("reponse "+ await responce.text());
+        let responce_Values = await responce.json();
+        var data = {
+            "code": code,
+            "responce": responce_Values
+        }
+        return data;
+
+    } catch (error) {
+        console.log("error on funtion_appoinment by channel : " + error);
+    }
+}
+
+
 
 
 export {Function_PatientSignIn};
@@ -267,6 +291,7 @@ export {Function_AddApointment};
 export {Funition_AddChannel};
 export {Function_GetDoctorsInfo};
 export {Function_GetAppoinmentListByChannelID};
+export {Function_GetAppoinmentListByPaientID};
 
 
 

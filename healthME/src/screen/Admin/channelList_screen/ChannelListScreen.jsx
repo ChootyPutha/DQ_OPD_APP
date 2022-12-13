@@ -5,12 +5,14 @@ import { fetchChannelList } from './hooks/fetchChannelListHooks';
 import { Funtion_GetALLChannelInfo } from '../../../api/apiCall';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
+import FetchIndicator from "../../../componet/FetchIndicator";
 
 const ChanelListScreen = () => {
 
     const navigation = useNavigation();
 
     const [channelList, setChannelList] = useState([]);
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
 
     useEffect(() => {
         fetchChannel();
@@ -18,18 +20,23 @@ const ChanelListScreen = () => {
 
     async function fetchChannel() {
         try {
+            setFetchIndicatorVisble(true);
             Funtion_GetALLChannelInfo().then((result) => {
                 if (result.code == "200") {
                     setChannelList(result.responce);
+                    setFetchIndicatorVisble(false);
 
                 } else {
                     setChannelList([]);
+                    setFetchIndicatorVisble(false);
                 }
             }).catch((err) => {
+                setFetchIndicatorVisble(false);
                 console.log("error " + err);
 
             });
         } catch (error) {
+            setFetchIndicatorVisble(false);
             console.log("error " + error);
 
         }
@@ -75,6 +82,12 @@ const ChanelListScreen = () => {
                     </View>
                 </View>
             </View>
+            {
+                (fetchIndicatorVisible) ? 
+                <FetchIndicator />
+                :
+                null
+            }
         </View>
     )
 }
@@ -130,17 +143,18 @@ const style = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         margin : 5,
+        backgroundColor : 'pink'
 
     },
     litItemDetailView: {
         width: '70%',
-        height: '90%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
     },
     listLitemIconView: {
         width: '20%',
-        height: '90%',
+        height: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },

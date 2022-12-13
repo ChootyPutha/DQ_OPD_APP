@@ -7,6 +7,7 @@ import Button from "../../componet/Button";
 import { useNavigation } from '@react-navigation/native';
 import { validEmailAddress, passwordMatch } from './hooks/formValidation';
 import {Function_PatientSiginUp, Function_AdminSiginUp} from '../../api/apiCall';
+import FetchIndicator from "../../componet/FetchIndicator";
 
 
 const SignUpScreen = () => {
@@ -19,6 +20,7 @@ const SignUpScreen = () => {
     const [name, setName] = useState("");
     const [confimPass, setConfirmPass] = useState("");
     const [selectAccount, setSelectetAccount] = useState("PA");
+    const [fetchIndicatorVisible, setFetchIndicatorVisble] = useState(false);
 
     const handleSignUpNavigation = () => {
         navigation.navigate('Auth');
@@ -58,8 +60,10 @@ const SignUpScreen = () => {
 
     const handleSignUpAction = () => {
         if (selectAccount === "PA") {
+            setFetchIndicatorVisble(true);
             signupPatient();
         } else if(selectAccount === "AD") {
+            setFetchIndicatorVisble(true);
             signupAdmin();
         }else{
             console.log("invalid account type");
@@ -71,19 +75,23 @@ const SignUpScreen = () => {
             Function_AdminSiginUp(email, password, confimPass, mobile, name)
                 .then(responseObj => {
                     if (responseObj.code == '200') {
+                        setFetchIndicatorVisble(false);
                         alert("Successfully Admin Signup");
                         navigation.navigate('Auth');
 
                     } else {
+                        setFetchIndicatorVisble(false);
                         alert("Unable to signup, plase try again");
                     }
                 })
                 .catch(err => {
+                    setFetchIndicatorVisble(false);
                     console.log('error on api call ' + err);
                     alert("something went wrong, please try again");
 
                 });
         } catch (error) {
+            setFetchIndicatorVisble(false);
             console.log("error " + error);
             alert("something went wrong, please try again");
         }
@@ -94,19 +102,23 @@ const SignUpScreen = () => {
             Function_PatientSiginUp(email, password, confimPass, mobile, name)
                 .then(responseObj => {
                     if (responseObj.code == '200') {
+                        setFetchIndicatorVisble(false);
                         alert("Successfully Patient Signup");
                         navigation.navigate('Auth');
 
                     } else {
+                        setFetchIndicatorVisble(false);
                         alert("Unable to signup, plase try again");
                     }
                 })
                 .catch(err => {
+                    setFetchIndicatorVisble(false);
                     console.log('error on api call ' + err);
                     alert("something went wrong, please try again");
 
                 });
         } catch (error) {
+            setFetchIndicatorVisble(false);
             console.log("error " + error);
             alert("something went wrong, please try again");
         }
@@ -155,6 +167,12 @@ const SignUpScreen = () => {
                 </View>
 
             </View>
+            {
+                (fetchIndicatorVisible) ? 
+                <FetchIndicator />
+                :
+                null
+            }
         </View>
     )
 }
