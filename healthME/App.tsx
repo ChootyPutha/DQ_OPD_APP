@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -21,12 +23,12 @@ import {
 
 
 
-// import RootStack from './src/navigation/Navigation';
-import HomeScreen from './src/screen/Paitent/home_screen/HomeScreen';
+import RootStack from './src/navigation/Navigation';
+//import HomeScreen from './src/screen/Paitent/home_screen/HomeScreen';
 
 const App = () => {
   return (
-    <HomeScreen/>
+    <RootStack/>
   );
 };
 

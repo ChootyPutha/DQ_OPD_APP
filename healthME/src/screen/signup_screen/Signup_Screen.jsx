@@ -5,9 +5,14 @@ import { navigationHook } from "../splash_screen/hooks/navigationHooks";
 import AccountSelector from "../../componet/AccountSelector";
 import InputFeild from "../../componet/InputFeild";
 import Button from "../../componet/Button";
+import {createAdminAccount, createPaientAccount} from './hooks/createUserHook';
+import { useNavigation } from '@react-navigation/native';
+import {validEmailAddress,passwordMatch} from './hooks/formValidation';
 
 
 const SignUpScreen = () => {
+
+    const navigation = useNavigation();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -17,11 +22,59 @@ const SignUpScreen = () => {
     const [selectAccount, setSelectetAccount] = useState("PA");
 
     const handleSignUpNavigation = () => {
-        navigationHook('');
+        navigation.navigate('Auth');
+    }
+
+    const validFormInput = () => {
+        if(email != ""){
+            if(validEmailAddress(email)){
+                if(name != ""){
+                    if(mobile != ""){
+                        if(password != ""){
+                            if(confimPass != ""){
+                                if(passwordMatch(password, confimPass)){
+                                    handleSignUpAction();
+                                }else{
+                                    alert("your password doesn't match");
+                                }
+                            }else{
+                                alert("Plase enter confim password");
+                            }
+                        }else{
+                            alert("Plase enter password");
+                        }
+                    }else{
+                        alert("Plase enter mobile number");
+                    }
+                }else{
+                    alert("Plase enter name");
+                }
+            }else{
+                alert("Plase enter valid email address");
+            }
+        }else {
+            alert("Plase enter email");
+        }
     }
 
     const handleSignUpAction = () => {
-        
+        if(selectAccount === "PA"){
+            const result = createPaientAccount(email,password,confimPass,mobile,name);
+            if(result.type === "success"){
+                navigation.navigate('Auth');
+            }else{
+                //shoe error messge
+                alert("Unable to signup, plase try again");
+            }
+        }else{
+            const result = createAdminAccount(email,password,confimPass,mobile,name);
+            if(result.type === "success"){
+                navigation.navigate('Auth');
+            }else{
+                //shoe error messge
+                alert("Unable to signup, plase try again");
+            }
+        }
     }
 
     return (
@@ -56,12 +109,12 @@ const SignUpScreen = () => {
                     </View>
                     <View style={style.buttonHolder}>
                         {/* button */}
-                        <Button onClick={handleSignUpAction} btnText={"SignUp"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
+                        <Button onClick={validFormInput} btnText={"SignUp"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
                     </View>
                     <View style={style.naviLinkHolder}>
                         {/* signup view */}
                         <TouchableOpacity onPress={handleSignUpNavigation}>
-                            <Text style={style.navigationLinkText}>SignUp here</Text>
+                            <Text style={style.navigationLinkText}>SignIn here</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
