@@ -1,8 +1,10 @@
 /* eslint-disable prettier/prettier */
+
 import React from "react";
 import { View, StyleSheet, Text,TextInput, TouchableOpacity, } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-const InputFeild = ({titel, valueSetter, placeholderText, ref}) => {
+const DateAndTimePicker = ({titel, valueSetter, placeholderText,mode, ref}) => {
 
     return(
         <View style={[style.main]}>
@@ -11,7 +13,7 @@ const InputFeild = ({titel, valueSetter, placeholderText, ref}) => {
                     <Text style={style.titelText}>{titel}</Text>
                 </View>
                 <View style={style.inputHolder}>
-                    <TextInput style={style.inputStyle} onChangeText={(val) => {valueSetter(val)}} placeholder={placeholderText}  />
+                    <DateTimePicker style={style.inputStyle} mode = {mode} onChange={(val) => {valueSetter(val)}} placeholder={placeholderText}  />
                 </View>
             </View>
         </View>
@@ -55,7 +57,6 @@ const style = StyleSheet.create({
         fontFamily: 'UbuntuMono-Bold',
         color: '#000'
     }
-
 });
 
-export default InputFeild;
+export default DateAndTimePicker;
