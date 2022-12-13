@@ -1,43 +1,44 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import { View, StyleSheet, Text, SafeAreaView, Image } from 'react-native';
+import FilterInput from "../../../componet/FilterInput";
 
 const HomeScreen = () => {
     return (
         <View style={style.main}>
             <View style={style.mainContainer}>
-                <View>
-                    <Text style={style.headderText}>Find Your Desired
-                        Doctor</Text>
+                <View style={style.titelHolder}>
+                    <Text style={style.headderText}>{"Find Your Desired \nDoctor"}</Text>
                 </View>
-
-
-                <View>
-                    <View>
+                <View style={style.dataLoaderHolder}>
+                    <View style={style.serchViewHolder}>
                         {/* serch view */}
+                        <FilterInput />
                     </View>
 
-                    <View>
-                        <View>
-                            <View>
-                                {/* icon */}
-                            </View>
-                            <View>
-                                <View>
-                                    <Text>Doc Name</Text>
+                    <View style={style.listpolulteHolder}>
+                        <View style={style.singleItemHolder}>
+                            <View style={style.infoViewholder}>
+                                <View style={style.DocNameHolder}>
+                                    <Text style={[style.docNameText, { color: '#000' }]}>Doc Name</Text>
                                 </View>
-                                <View>
-                                    <Text>Specalist</Text>
+                                <View style={style.seplistHolder}>
+                                    <Text style={[style.speNameText, { color: '#000' }]}>Specalist</Text>
                                 </View>
-                                <View>
-                                    <Text>Appinrmnt Date and Time</Text>
+                                <View style={style.buttonView}>
+                                    <View style={[style.buttonHolder,{height : '50%'}]}>
+                                        <Text style={style.docNameText}>Book an appointment</Text>
+                                    </View>
+                                    <View style={[style.apoinmentHolder,{height : '30%'}]}>
+                                        <Text style={style.speNameText}>Appinrmnt Date and Time</Text>
+                                    </View>
                                 </View>
+
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
-
-
         </View>
     )
 }
@@ -51,12 +52,89 @@ const style = StyleSheet.create({
     mainContainer: {
         width: "100%",
         height: "100%",
-        justifyContent: 'center'
+        alignItems: 'center'
     },
     headderText: {
         fontFamily: 'UbuntuMono-Bold',
         fontSize: 30,
         color: '#00CEC9'
+    },
+    titelHolder: {
+        width: "96%",
+        height: "20%",
+        justifyContent: 'center',
+    },
+    dataLoaderHolder: {
+        width: "96%",
+        height: "80%",
+        //justifyContent: 'center',
+        alignItems: 'center'
+    },
+    serchViewHolder: {
+        width: "96%",
+        height: "10%",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    listpolulteHolder: {
+        width: "96%",
+        height: "90%",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    singleItemHolder: {
+        width: "96%",
+        height: "18%",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#6C5CE71F',
+        borderRadius: 10,
+    },
+    infoViewholder: {
+        width: "94%",
+        height: "96%",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    DocNameHolder: {
+        width: "94%",
+        height: "25%",
+        justifyContent: 'center',
+    },
+    docNameText: {
+        fontFamily: 'UbuntuMono-Bold',
+        fontSize: 20,
+        color: '#fff'
+    },
+    seplistHolder: {
+        width: "94%",
+        height: "20%",
+        justifyContent: 'center',
+    },
+    speNameText: {
+        fontFamily: 'UbuntuMono-Bold',
+        fontSize: 14,
+        color: '#fff'
+    },
+    apoinmentHolder: {
+        width: "94%",
+        height: "20%",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonHolder: {
+        width: "94%",
+        height: "30%",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonView : {
+        width: "98%",
+        height: "50%",
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius : 15,
+        backgroundColor :'#00CEC9'
     }
 });
 

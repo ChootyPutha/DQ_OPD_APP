@@ -22,11 +22,11 @@ import {
 
 
 // import RootStack from './src/navigation/Navigation';
-import AuthScreen from "./src/screen/auth_screen/AuthScreen";
+import HomeScreen from './src/screen/Paitent/home_screen/HomeScreen';
 
 const App = () => {
   return (
-    <AuthScreen/>
+    <HomeScreen/>
   );
 };
 

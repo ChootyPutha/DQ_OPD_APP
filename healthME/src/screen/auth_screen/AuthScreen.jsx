@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, } from "react";
 import { View, StyleSheet, Text, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { navigationHook } from "../splash_screen/hooks/navigationHooks";
@@ -5,12 +6,12 @@ import Button from "../../componet/Button";
 import InputFeild from "../../componet/InputFeild";
 import AccountSelector from "../../componet/AccountSelector";
 const AuthScreen = () => {
-    const handelSinupNavigation = () => {
+    const handelSingInNavigation = () => {
         navigationHook('Signup');
     }
 
-    const handelSingupAction = () => {
-
+    const handelSinginAction = () => {
+        
     }
 
     const [email, setEmail] = useState("");
@@ -45,11 +46,11 @@ const AuthScreen = () => {
                     </View>
                     <View style={style.buttonHolder}>
                         {/* button */}
-                        <Button onClick={handelSingupAction} btnText={"SignIn"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
+                        <Button onClick={handelSinginAction} btnText={"SignIn"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
                     </View>
                     <View style={style.naviLinkHolder}>
                         {/* signup view */}
-                        <TouchableOpacity onPress={handelSinupNavigation}>
+                        <TouchableOpacity onPress={handelSingInNavigation}>
                             <Text style={style.navigationLinkText}>SignUp here</Text>
                         </TouchableOpacity>
                     </View>
