@@ -5,13 +5,52 @@ import { navigationHook } from "../splash_screen/hooks/navigationHooks";
 import Button from "../../componet/Button";
 import InputFeild from "../../componet/InputFeild";
 import AccountSelector from "../../componet/AccountSelector";
+import {Funtion_Sigin} from './hooks/siginHooks';
+import { useNavigation } from '@react-navigation/native';
+import {validEmailAddress} from '../signup_screen/hooks/formValidation';
+
 const AuthScreen = () => {
+
+    const navigation = useNavigation();
+
     const handelSingInNavigation = () => {
-        navigationHook('Signup');
+        navigation.navigate('Signup');
+    }
+
+    const formValidation = () => {
+        
+        if(email != ""){
+            if(validEmailAddress(email)){
+                if(password != ""){
+                   // handelSinginAction();
+                    navigation.navigate('PatientHome');
+                }else{
+                    alert("Plase enter password");
+                }
+            }else{
+                alert("Plase enter valid email address");
+            }
+        }else{
+            alert("Plase enter email");
+        }
     }
 
     const handelSinginAction = () => {
-        
+        const response = Funtion_Sigin(email,password,selectAccount);
+        console.log(' result '+JSON.stringify(response));
+
+        if(response.type == 'success' && selectAccount == 'PA'){
+            //naviagte to patient home
+            //navigationHook('');
+            navigation.navigate('PatientHome');
+        // eslint-disable-next-line quotes
+        }else if (response.type == 'success' && selectAccount == "AD"){
+            //naviagte to admin home
+            navigation.navigate('AdminHome');
+        }else{
+            //show error message
+            alert("Unable to signin, plase try again");
+        }
     }
 
     const [email, setEmail] = useState("");
@@ -46,7 +85,7 @@ const AuthScreen = () => {
                     </View>
                     <View style={style.buttonHolder}>
                         {/* button */}
-                        <Button onClick={handelSinginAction} btnText={"SignIn"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
+                        <Button onClick={formValidation} btnText={"SignIn"} bgColour={"#00CEC9"} txtColour={"#FFF"} />
                     </View>
                     <View style={style.naviLinkHolder}>
                         {/* signup view */}

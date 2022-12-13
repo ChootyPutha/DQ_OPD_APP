@@ -1,18 +1,28 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable react-hooks/rules-of-hooks */
 import {useNavigation} from '@react-navigation/native';
 
 const navigation = useNavigation();
 
-function navigateTimeOutLoginHook(pathName) {
+export const navigateTimeOutLoginHook = pathName => {
   setTimeout(() => {
     // calling naviagte to login
     navigation.navigate(pathName);
   }, 3000);
 }
 
-function navigationHook(pathName) {
+// function navigateTimeOutLoginHook(pathName) {
+  
+// }
+
+export const navigationHook = pathName => {
   navigation.navigate(pathName);
 }
 
-export {navigateTimeOutLoginHook};
-export {navigationHook};
+// function navigationHook(pathName) {
+  
+// }
+
+// export {navigateTimeOutLoginHook};
+// export {navigationHook};
