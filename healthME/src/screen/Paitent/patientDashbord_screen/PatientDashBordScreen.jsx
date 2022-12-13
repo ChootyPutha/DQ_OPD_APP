@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeScreen from "../home_screen/HomeScreen";
 import MyAppoinmentHistoryScreen from "../myhistory_screen/MyAppinmentPastInfo_Screen";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 const PatientDashBordScreen = () => {
 
@@ -13,8 +14,8 @@ const PatientDashBordScreen = () => {
 
     return (
         <Tab.Navigator>
-            <Tab.Screen name="Home"  options={{headerShown: false}} component={HomeScreen} />
-            <Tab.Screen name="My Appoinment" options={{headerShown: false}} component={MyAppoinmentHistoryScreen} />
+            <Tab.Screen name="Home"  options={{headerShown: false,tabBarIcon:({tintColor})=>(<Icon name="home" color={tintColor} size={25}/>  )}} component={HomeScreen} />
+            <Tab.Screen name="My Appoinment" options={{headerShown: false,tabBarIcon:({tintColor})=>(<Icon name="carryout" color={tintColor} size={25}/>  )}} component={MyAppoinmentHistoryScreen} />
         </Tab.Navigator>
     )
 }

@@ -1,13 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react";
 import { View, StyleSheet, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native';
-import { navigationHook } from "../splash_screen/hooks/navigationHooks";
 import AccountSelector from "../../componet/AccountSelector";
 import InputFeild from "../../componet/InputFeild";
 import Button from "../../componet/Button";
-import {createAdminAccount, createPaientAccount} from './hooks/createUserHook';
 import { useNavigation } from '@react-navigation/native';
-import {validEmailAddress,passwordMatch} from './hooks/formValidation';
+import { validEmailAddress, passwordMatch } from './hooks/formValidation';
+import {Function_PatientSiginUp, Function_AdminSiginUp} from '../../api/apiCall';
 
 
 const SignUpScreen = () => {
@@ -26,54 +25,90 @@ const SignUpScreen = () => {
     }
 
     const validFormInput = () => {
-        if(email != ""){
-            if(validEmailAddress(email)){
-                if(name != ""){
-                    if(mobile != ""){
-                        if(password != ""){
-                            if(confimPass != ""){
-                                if(passwordMatch(password, confimPass)){
+        if (email != "") {
+            if (validEmailAddress(email)) {
+                if (name != "") {
+                    if (mobile != "") {
+                        if (password != "") {
+                            if (confimPass != "") {
+                                if (passwordMatch(password, confimPass)) {
                                     handleSignUpAction();
-                                }else{
+                                } else {
                                     alert("your password doesn't match");
                                 }
-                            }else{
+                            } else {
                                 alert("Plase enter confim password");
                             }
-                        }else{
+                        } else {
                             alert("Plase enter password");
                         }
-                    }else{
+                    } else {
                         alert("Plase enter mobile number");
                     }
-                }else{
+                } else {
                     alert("Plase enter name");
                 }
-            }else{
+            } else {
                 alert("Plase enter valid email address");
             }
-        }else {
+        } else {
             alert("Plase enter email");
         }
     }
 
     const handleSignUpAction = () => {
-        if(selectAccount === "PA"){
-            const result = createPaientAccount(email,password,confimPass,mobile,name);
-            if(result.type === "success"){
-                navigation.navigate('Auth');
-            }else{
-                //shoe error messge
-                alert("Unable to signup, plase try again");
-            }
+        if (selectAccount === "PA") {
+            signupPatient();
+        } else if(selectAccount === "AD") {
+            signupAdmin();
         }else{
-            const result = createAdminAccount(email,password,confimPass,mobile,name);
-            if(result.type === "success"){
-                navigation.navigate('Auth');
-            }else{
-                //shoe error messge
-                alert("Unable to signup, plase try again");
-            }
+            console.log("invalid account type");
+        }
+    }
+
+    function signupAdmin() {
+        try {
+            Function_AdminSiginUp(email, password, confimPass, mobile, name)
+                .then(responseObj => {
+                    if (responseObj.code == '200') {
+                        alert("Successfully Admin Signup");
+                        navigation.navigate('Auth');
+
+                    } else {
+                        alert("Unable to signup, plase try again");
+                    }
+                })
+                .catch(err => {
+                    console.log('error on api call ' + err);
+                    alert("something went wrong, please try again");
+
+                });
+        } catch (error) {
+            console.log("error " + error);
+            alert("something went wrong, please try again");
+        }
+    }
+
+    function signupPatient() {
+        try {
+            Function_PatientSiginUp(email, password, confimPass, mobile, name)
+                .then(responseObj => {
+                    if (responseObj.code == '200') {
+                        alert("Successfully Patient Signup");
+                        navigation.navigate('Auth');
+
+                    } else {
+                        alert("Unable to signup, plase try again");
+                    }
+                })
+                .catch(err => {
+                    console.log('error on api call ' + err);
+                    alert("something went wrong, please try again");
+
+                });
+        } catch (error) {
+            console.log("error " + error);
+            alert("something went wrong, please try again");
         }
     }
 
