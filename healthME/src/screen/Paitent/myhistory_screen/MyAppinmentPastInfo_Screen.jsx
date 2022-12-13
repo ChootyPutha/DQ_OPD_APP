@@ -1,8 +1,11 @@
 /* eslint-disable prettier/prettier */
-import React from "react";
+import React,{useState, useEffect} from "react";
 import { View, StyleSheet, Text, SafeAreaView } from "react-native";
 
 const MyAppoinmentHistoryScreen = () => {
+
+    const [myAppoinment, setMyAppoinment] = useState([]);
+
     return (
         <View style={style.main}>
             <View style={style.mainContainer}>

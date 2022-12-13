@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-const BASE_URL = "";
+const BASE_URL = "http://192.168.8.103:8000/api";
 
 const Function_PatientSignIn = async (email, pass, type) => {
     var url = BASE_URL + "/auth/patient";
@@ -111,6 +111,7 @@ const Function_AdminSiginUp = async(email, pass, repass, mobile, name) => {
         let code = responce.status;
         //console.log("reponse "+ await responce.text());
         let responce_Values = await responce.json();
+        console.log("response "+JSON.stringify(responce_Values));
         var data = {
             "code": code,
             "responce": responce_Values
@@ -184,8 +185,8 @@ const Funition_AddChannel = async (doc, channeldate, stTime, edTime,duraton, cou
         "channelDate": channeldate,
         "startTime": stTime,
         "endTime": edTime,
-        "duration" : duraton,
-        "countChannel" : count,
+        "duration" : parseInt(duraton),
+        "countChannel" : parseInt(count),
     });
     try {
         let responce = await fetch(url, {
@@ -232,6 +233,29 @@ const Function_GetDoctorsInfo = async () => {
     }
 }
 
+const Function_GetAppoinmentListByChannelID = async (chanelID) => {
+    var url = BASE_URL + `/appoinment/${chanelID}`;
+    try {
+        let responce = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        let code = responce.status;
+        //console.log("reponse "+ await responce.text());
+        let responce_Values = await responce.json();
+        var data = {
+            "code": code,
+            "responce": responce_Values
+        }
+        return data;
+
+    } catch (error) {
+        console.log("error on funtion_appoinment by channel : " + error);
+    }
+}
+
 
 
 export {Function_PatientSignIn};
@@ -242,6 +266,7 @@ export {Funtion_GetALLChannelInfo};
 export {Function_AddApointment};
 export {Funition_AddChannel};
 export {Function_GetDoctorsInfo};
+export {Function_GetAppoinmentListByChannelID};
 
 
 

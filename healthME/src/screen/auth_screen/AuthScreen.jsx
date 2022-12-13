@@ -5,57 +5,103 @@ import { navigationHook } from "../splash_screen/hooks/navigationHooks";
 import Button from "../../componet/Button";
 import InputFeild from "../../componet/InputFeild";
 import AccountSelector from "../../componet/AccountSelector";
-import {Funtion_Sigin} from './hooks/siginHooks';
 import { useNavigation } from '@react-navigation/native';
-import {validEmailAddress} from '../signup_screen/hooks/formValidation';
+import { validEmailAddress } from '../signup_screen/hooks/formValidation';
+import { Function_AdminSignIn, Function_PatientSignIn } from '../../api/apiCall';
 
 const AuthScreen = () => {
 
     const navigation = useNavigation();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [selectAccount, setSelectetAccount] = useState("PA"); // admin AD
 
     const handelSingInNavigation = () => {
         navigation.navigate('Signup');
     }
 
     const formValidation = () => {
-        
-        if(email != ""){
-            if(validEmailAddress(email)){
-                if(password != ""){
-                   // handelSinginAction();
-                    navigation.navigate('PatientHome');
-                }else{
+
+        if (email != "") {
+            if (validEmailAddress(email)) {
+                if (password != "") {
+                    handelSinginAction();
+                    //navigation.navigate('AdminHome');
+                } else {
                     alert("Plase enter password");
                 }
-            }else{
+            } else {
                 alert("Plase enter valid email address");
             }
-        }else{
+        } else {
             alert("Plase enter email");
         }
     }
 
-    const handelSinginAction = () => {
-        const response = Funtion_Sigin(email,password,selectAccount);
-        console.log(' result '+JSON.stringify(response));
-
-        if(response.type == 'success' && selectAccount == 'PA'){
-            //naviagte to patient home
-            //navigationHook('');
-            navigation.navigate('PatientHome');
-        // eslint-disable-next-line quotes
-        }else if (response.type == 'success' && selectAccount == "AD"){
-            //naviagte to admin home
-            navigation.navigate('AdminHome');
-        }else{
-            //show error message
-            alert("Unable to signin, plase try again");
+    const handelSinginAction = async () => {
+        if (selectAccount == 'PA') {
+            AuthPatient();
+        } else if (selectAccount == "AD") {
+            AuthAdmin();
+        } else {
+            console.log("invalid account type");
         }
     }
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [selectAccount, setSelectetAccount] = useState("PA"); // admin AD
+    function AuthAdmin() {
+        try {
+            Function_AdminSignIn(email, password, selectAccount).then((result) => {
+                if (result.code == "200") {
+
+                    if (result.responce._id != undefined) {
+                        //auth success
+                        navigation.navigate('AdminHome');
+                    }else{
+                        alert("Unable to find your account, Place re-check your email and password");
+                    }
+                    //assing id to redux state
+                } else {
+                    // auth failed
+                    alert("Something went wrong, plase try again");
+
+                }
+            }).catch((e) => {
+                console.log("api " + e);
+                alert("Something went wrong, plase try again");
+                //error
+            })
+        } catch (error) {
+            console.log("error " + error);
+            alert("Something went wrong, plase try again");
+        }
+    }
+
+    function AuthPatient() {
+        try {
+            Function_PatientSignIn(email, password, selectAccount).then((result) => {
+                if (result.code == "200") {
+                    //auth success
+                    navigation.navigate('PatientHome');
+
+                } else {
+                    // auth failed
+                    alert("Unable to signin, plase try again");
+
+                }
+            }).catch((e) => {
+                console.log("api " + e);
+                alert("Something went wrong, plase try again");
+
+                //error
+            })
+        } catch (error) {
+            console.log("error " + error);
+            alert("Something went wrong, plase try again");
+
+            //error
+        }
+    }
+
 
     return (
         <View style={style.main}>

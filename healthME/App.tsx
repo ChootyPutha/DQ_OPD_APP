@@ -27,6 +27,7 @@ import RootStack from './src/navigation/Navigation';
 //import HomeScreen from './src/screen/Paitent/home_screen/HomeScreen';
 
 const App = () => {
+  
   return (
     <RootStack/>
   );

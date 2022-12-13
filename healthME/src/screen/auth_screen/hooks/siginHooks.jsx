@@ -4,7 +4,7 @@ import {
     Function_AdminSignIn,
 } from '../../../api/apiCall';
 
-export function Funtion_Sigin(email, password, type) {
+export async function Funtion_Sigin(email, password, type) {
     // eslint-disable-next-line eqeqeq
 
     let obj = {
@@ -15,9 +15,10 @@ export function Funtion_Sigin(email, password, type) {
     if (type === 'PA') {
         //caliing patien api
         try {
-            Function_PatientSignIn(email, password, type).then((result) => {
+           await Function_PatientSignIn(email, password, type).then((result) => {
                 if(result.code == "200"){
                     //auth success
+                    console.log("patient "+JSON.stringify(result.responce));
                     obj = {
                         data : result.responce,
                         type : "success",
@@ -42,9 +43,10 @@ export function Funtion_Sigin(email, password, type) {
     } else {
         // caling admin api
         try {
-            Function_AdminSignIn(email, password, type).then((result) => {
+          await Function_AdminSignIn(email, password, type).then((result) => {
                 if(result.code == "200"){
                     //auth success
+                    console.log("admin "+JSON.stringify(result.responce));
                     obj = {
                         data : result.responce,
                         type : "success",

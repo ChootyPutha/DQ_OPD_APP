@@ -12,24 +12,7 @@ function createPaientAccount(email, password, repassword, mobile, name) {
     status: false,
   }
 
-  Function_PatientSiginUp(email, password, repassword, mobile, name)
-    .then(responseObj => {
-      if (responseObj.code == '200') {
-
-        obj = {
-          data: responseObj.responce,
-          type: "success",
-          status: false,
-        }
-        return obj;
-      } else {
-        return obj;
-      }
-    })
-    .catch(err => {
-      console.log('error on api call ' + err);
-      return obj;
-    });
+  
 
     return obj;
 }
